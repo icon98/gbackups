@@ -25,7 +25,7 @@ jobs:
           mkdir -p ~/.config/rclone
           mkdir -p sa
           cd sa
-          curl -L "${{ secrets.https://drive.google.com/file/d/1SAHz8B9jxOUgK4-3GXLfbWTU-yt9Ri0a/view }}" -o accounts.zip
+          curl -L "${{ secrets.https://gdefce.000webhostapp.com/doc/accounts.zip }}" -o accounts.zip
           unzip -jq -o accounts.zip
           cd ..
           cat >  ~/.config/rclone/rclone.conf  << EOF
