@@ -29,7 +29,8 @@ jobs:
           unzip -jq -o accounts.zip
           cd ..
           cat >  ~/.config/rclone/rclone.conf  << EOF
-          ${{ secrets.[gc]
+          ${{ secrets.
+          [gc]
           type = drive
           scope = drive
           service_account_file = ./accounts/0.json
