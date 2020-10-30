@@ -1,0 +1,42 @@
+name: gclone sync
+
+on:
+  schedule:
+    - cron: 30 8 * * 0
+  workflow_dispatch:
+    inputs:
+    
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    name: TD sync
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: gclone Install
+        run: |
+          wget -qO- https://api.github.com/repos/donwa/gclone/releases/latest \
+          | grep browser_download_url | grep Linux_x86_64 | cut -d '"' -f 4 \
+          | wget --no-verbose -i- -O- | gzip -d -c > rclone
+          sudo mv rclone /usr/bin
+          sudo chmod +x /usr/bin/rclone
+      - name: gclone Config
+        run: |
+          mkdir -p ~/.config/rclone
+          mkdir -p sa
+          cd sa
+          curl -L "${{ secrets.https://drive.google.com/file/d/1SAHz8B9jxOUgK4-3GXLfbWTU-yt9Ri0a/view }}" -o accounts.zip
+          unzip -jq -o accounts.zip
+          cd ..
+          cat >  ~/.config/rclone/rclone.conf  << EOF
+          ${{ secrets.[gc]
+type = drive
+scope = drive
+service_account_file = ./accounts/0.json
+service_account_file_path = ./accounts/ }}
+          EOF
+      - name: gclone Run
+        run: |
+          echo "::add-mask::gclone sa file: accounts/"
+          echo "::add-mask::.json"
+          rclone sync ${{ secrets.gc:0AHBoq419Roq7Uk9PVA gc:0AI9PjlpqVLi1Uk9PVA }} --drive-server-side-across-configs
